@@ -1,3 +1,5 @@
+#createing scene object
+
 class Scene:
     def __init__(self, description, interactables):
         self.description = description
