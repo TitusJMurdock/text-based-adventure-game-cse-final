@@ -1,4 +1,4 @@
-#creating scene object
+
 
 class Scene:
     def __init__(self, description, interactables):
@@ -33,17 +33,25 @@ class Enemy:
 
 
 class Player(Enemy):
-    def __init__(self, description, hp, damage, inventory,):
+    def __init__(self, description, hp, damage, inventory, scene):
         super().__init__(description, hp, damage)
         self.inventory = inventory
+        self.scene = scene
         
+    def in_inventory(self, item):
+        if item in self.inventory:
+            return True
+        else:
+            return False
 
     def update(self):
         if self.hp == 0:
             self.alive = False
 
-        if "machete" in self.inventory:
+        if Player.in_inventory("machete") == True:
             self.damage = 3
+    
+
 
 
 def start_menu():
