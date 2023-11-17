@@ -13,7 +13,7 @@ def parse():
     interactable = list(set(text) & set(interactable_keywords))
 
     #combines action and interactale into tuple
-    #action is always index 1, interactable is always index 2
+    #action is always index 0, interactable is always index 1
     interaction = tuple(action + interactable)
 
     return interaction

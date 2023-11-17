@@ -16,41 +16,22 @@ class Interactable:
     def describe(self):
         print(self.description)
 
-class Enemy:
-    def __init__(self, description, hp, damage):
+class Player:
+    def __init__(self, description, inventory, scene):
         self.description = description
-        self.hp = hp
-        self.damage = damage
         self.alive = True
-        
-    
-    def do_damage(self, Player):
-        Player.hp = Player.hp - self.damage
-    
-    def update(self):
-        if self.hp == 0:
-            self.alive = False
-
-
-class Player(Enemy):
-    def __init__(self, description, hp, damage, inventory, scene):
-        super().__init__(description, hp, damage)
         self.inventory = inventory
         self.scene = scene
-        
+
     def in_inventory(self, item):
         if item in self.inventory:
             return True
         else:
             return False
-
-    def update(self):
-        if self.hp == 0:
-            self.alive = False
-
-        if Player.in_inventory("machete") == True:
-            self.damage = 3
-    
+        
+    def print_inventory(self):
+        print(f"You have {self.inventory}")
+        
 
 
 
@@ -58,9 +39,11 @@ def start_menu():
     choice = (input("Would you like to go on an adventure? (yes or no) ")).lower()
 
     if choice == "yes":
-        return True
+        running = True
+        return running
     elif choice == "no":
-        return False
+        running = False
+        return running
     else:
         print("not a valid input")
 
@@ -78,11 +61,4 @@ if __name__ == '__main__':
     while running == True:
         pass
         
-    player = Player("description", 10, 1, ["key", "something"])
-    python = Enemy("a scary snake", 5, 10)
-    print(player.hp)
-    print(player.alive)
-    python.do_damage(player)
-    player.update()
-    print(player.hp)
-    print(player.alive)
+    player = Player("description", 10, 1, ["key", "something"], scene1)
