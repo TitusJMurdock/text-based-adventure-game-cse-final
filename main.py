@@ -1,64 +1,47 @@
 
+from classes import *
+import time
 
-class Scene:
-    def __init__(self, description, interactables):
-        self.description = description
-        self.interactables = interactables
-
-    def describe(self):
-        print(self.description)
-
-class Interactable:
-    def __init__(self, description, interaction_items):
-        self.description = description
-        self.interaction_items = interaction_items
-
-    def describe(self):
-        print(self.description)
-
-class Player:
-    def __init__(self, description, inventory, scene):
-        self.description = description
-        self.alive = True
-        self.inventory = inventory
-        self.scene = scene
-
-    def in_inventory(self, item):
-        if item in self.inventory:
-            return True
-        else:
-            return False
         
-    def print_inventory(self):
-        print(f"You have {self.inventory}")
-        
-
-
 
 def start_menu():
+    global running
+    wait = 0
+    print("You were flying over to see your family for Thanksgiving")
+    time.sleep(wait)
+    print("when suddenly the plane started shaking and people started panicking.\n")
+    time.sleep(wait)
+    print("You passed out and woke up to see yourself")
+    time.sleep(wait)
+    print("surrounded by flames, dead people, luggage,")
+    time.sleep(wait)
+    print("and parts of the plane scattered everywhere in the jungle.\n")
+    time.sleep(wait)
+    print("How you survived? Who knows.")
+    time.sleep(wait)
+    print("Find your way out of the jungle")
+    time.sleep(wait)
+    print("so you can get to your family in time for Thanksgiving.\n")
+    time.sleep(wait)
+
     choice = (input("Would you like to go on an adventure? (yes or no) ")).lower()
 
     if choice == "yes":
         running = True
-        return running
+        
     elif choice == "no":
         running = False
-        return running
+        
     else:
         print("not a valid input")
 
-
+player = Player("player_desc", [])
 
 
 
 if __name__ == '__main__':
     running = False
-    door = Interactable("a simple door, it could be locked", ["key", "hammer"])
-    bush = Interactable("just a bush", ["machete", "match"])
-
-
-    scene1 = Scene("a test scene", [door, bush])
-    while running == True:
-        pass
-        
-    player = Player("description", 10, 1, ["key", "something"], scene1)
+    start_menu()
+    while running:
+        run_plane(player)
+        running = False
