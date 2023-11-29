@@ -6,7 +6,6 @@ import time
 
 def start_menu():
     global running
-    wait = 0
     print("You were flying over to see your family for Thanksgiving")
     time.sleep(wait)
     print("when suddenly the plane started shaking and people started panicking.\n")
@@ -41,5 +40,12 @@ player = Player("player_desc", [])
 
 if __name__ == '__main__':
     start_menu()
-    while player.alive:
+    while player.alive == True:
         run_plane(player)
+        run_river(player)
+        
+        interaction = parse_interaction()
+        if interaction[1] == 'left':
+            run_snakes(player) 
+        if interaction[1] == 'right':
+            run_quicksand(player)

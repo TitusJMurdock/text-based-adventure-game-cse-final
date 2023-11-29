@@ -1,6 +1,9 @@
 from interaction_parser import *
 import textwrap
+import time
+import random
 
+wait = 0
 
 class Scene:
     def __init__(self, description, interactables):
@@ -46,6 +49,16 @@ class Player:
         for i in range(0, len(self.inventory)):
             print(self.inventory[i].name)
 
+
+
+def d100(percent_chance):
+    d100 = random.randint(1, 100)
+    if d100 >= percent_chance:
+        return 'Success!'
+        
+    elif d100 < percent_chance:
+        return 'Failure. . .'
+
         
 food = Interactable('food','a bag of beef jerky')
 first_aid_kit = Interactable('first aid kit', 'a red box with a white cross, filled with medical supplies')
@@ -60,7 +73,7 @@ def run_plane(player):
     plane.describe()
     
 
-    while player.alive:
+    while player.alive == True:
         interaction = parse_interaction()
         
         try:
@@ -95,13 +108,15 @@ def run_plane(player):
                 
                 if (interaction[1] == 'path' or interaction[1] == 'road'):
                     print('\n\n\n')
-                    run_river(player)
+                    break
+                    
                 
 
             elif interaction[0] == 'take' or interaction[0] == 'go' or interaction[0] == 'walk':
                 if interaction[1] == 'path' or interaction[1] == 'road':
                     print('\n\n\n')
-                    run_river(player)
+                    break
+                    
             else:
                 if (interaction[1] == 'food' or interaction[1] == 'beef' or interaction[1] == 'jerky'):
                     food.describe()
@@ -127,9 +142,16 @@ def run_river(player):
     river.describe()
 
     while player.alive == True:
+
+        if river_crossed == True:
+                print(textwrap.fill("You are on the other side of the river now. You can see two paths. To the left is a path that has absolutely no snakes. I promise! To the right is a path covered in some kind of sand."))
+                break
+
+
         interaction = parse_interaction()
 
         try:
+
             if interaction[0] == 'take' or interaction[0] == 'pick' or interaction[0] == 'drink':
                 
                 if (interaction[1] == 'tree'):
@@ -143,6 +165,7 @@ def run_river(player):
                 
                 if (interaction[1] == 'water' or interaction[1] == 'river'):
                     print( "You died! The water was contaminated and you hallucinated to your death.\n"  )
+                    input()
                     player.alive = False
             
             elif interaction[0] == 'chop' or interaction[0] == 'cut':
@@ -171,13 +194,7 @@ def run_river(player):
                 elif interaction[1] == 'rocks' or interaction[1] == 'stones' or interaction[1] == 'rock' or interaction[1] == 'stone':
                     rocks.describe()
             
-            if river_crossed == True:
-                print(textwrap.fill("You are on the other side of the river now. You can see two paths. To the left is a path that has absolutely no snakes. I promise! To the right is a path covered in some kind of sand."))
-                interaction = parse_interaction()
-                if interaction[1] == 'left':
-                    run_snakes(player)
-                if interaction[1] == 'right':
-                    run_quicksand(player)
+            
 
 
 
@@ -196,12 +213,76 @@ def run_snakes(player):
     snakes_scene.describe()
 
     while player.alive == True:
+
+        if snakes_gone == True:
+                print(textwrap.fill("You manage to escape the snakes and come to a cave. The inside is dark and hard to see. You could go over the cave or brave the darkness and go through.\n"))
+                interaction = parse_interaction()
+                if interaction[1] == 'over':
+                    run_over_cave()
+                if interaction[1] == 'through':
+                    run_cave()
+
+
         interaction = parse_interaction()
 
         try:
+
+            if interaction[0] == 'wrangle':
+                print('Yeehaw')
+                snakes_gone = True
+
             if interaction[0] == 'take' or interaction[0] == 'pick':
                 if interaction[1] == 'snake' or interaction[1] == 'snakes':
-                    print("Are you crazy? No you can't pick up the snakes!")
+                    print("Are you crazy? No you can't pick up the snakes!\n")
+
+            elif interaction[0] == 'hit' or interaction[0] == 'attack' or interaction[0] == 'kill' or interaction[0] == 'use' or interaction[0] == 'chop' or interaction[0] == 'cut' or interaction[0] == 'throw':
+                if (interaction[1] == 'food' or interaction[1] == 'beef' or interaction[1] == 'jerky') and (food in player.inventory):
+                    print('You throw your food at the snakes, distracting them for long enough to get away.\n')
+                    player.inventory.remove(food)
+                    snakes_gone = True
+                elif (interaction[1] == 'food' or interaction[1] == 'beef' or interaction[1] == 'jerky') and (food not in player.inventory):
+                    print("You throw your food at the snakes. . . oh wait. . . you don't have any food.\n")
+
+                if (interaction[1] == 'snake' or interaction[1] == 'snakes' or interaction[1] == 'shrapnel' or interaction[1] == 'debris' or interaction[1] == 'plane' or interaction[1] == 'piece') and (shrapnel in player.inventory):
+                    print("You try to fight the snakes with your shrapnel. So brave.\n")
+                    time.sleep(wait)
+                    print(f"Determining outcome… (50% chance of success)\n")
+                    time.sleep(wait)
+                    outcome = d100(50)
+
+                    if outcome == 'Success!':
+                        print(outcome)
+                        print("All the snakes are gone\n")
+                        snakes_gone = True
+                    
+                    else:
+                        print(outcome)
+                        time.sleep(wait)
+                        if first_aid_kit in player.inventory:
+                            print('Luckily you have a first aid kit!')
+                            player.inventory.remove(first_aid_kit)
+                        else:
+                            print("You died! The snakes didn't like the taste of shrapnel so they had you for lunch. If only you had a first aid kit.\n")
+                            input()
+                            player.alive = False
+                elif (interaction[1] == 'snake' or interaction[1] == 'snakes' or interaction[1] == 'shrapnel' or interaction[1] == 'debris' or interaction[1] == 'plane' or interaction[1] == 'piece') and (shrapnel not in player.inventory):
+                    print("You don’t have any weapons!")
+
+
+
+            elif interaction[0] == 'run' or interaction[0] == 'leave' or interaction[0] == 'flee':
+                if first_aid_kit in player.inventory:
+                    print("A snake bit you as you ran away. Luckily you have a first aid kit!\n")
+                    player.inventory.remove(first_aid_kit)
+                else:
+                    print("You died! You tripped over one of the snakes and got strangled to death by them.\n")
+                    input()
+                    player.alive = False
+            else:
+                if (interaction[1] == 'snake' or interaction[1] == 'snakes'): 
+                    snakes.describe()
+            
+
 
         except IndexError:
             print("I don't know that word. Try using at least two words, one action,\n and one object. (e.g. KILL SNAKES!!)\n")
