@@ -40,8 +40,6 @@ player = Player("player_desc", [])
 
 
 if __name__ == '__main__':
-    running = False
     start_menu()
-    while running:
+    while player.alive:
         run_plane(player)
-        running = False

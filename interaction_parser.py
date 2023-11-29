@@ -1,6 +1,6 @@
 #funtion for parsing input
-action_keywords = ['look', 'search', 'take', 'pick', 'inventory']
-interactable_keywords = ['food', 'beef', 'jerky', 'first', 'aid', 'kit', 'medicine', 'shrapnel', 'debris', 'plane', 'piece']
+action_keywords = ['look', 'search', 'take', 'pick', 'inventory', 'chop', 'cut', 'use', 'cross', 'go', 'sail', 'jump', 'hop',]
+interactable_keywords = ['food', 'beef', 'jerky', 'first', 'aid', 'kit', 'medicine', 'shrapnel', 'debris', 'plane', 'piece', 'path', 'road', 'tree', 'leaf', 'boat', 'rocks', 'stones', 'water', 'river', 'left', 'right']
 
 
 def parse_interaction():
@@ -9,6 +9,7 @@ def parse_interaction():
 
     #take input and split into list
     text = (input("What will you do? (type 'inventory' to see your items) ")).lower()
+    print('\n')
     if text == ('inventory' or 'quit'): interaction = text; return interaction
     text = text.split()
 
