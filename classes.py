@@ -37,6 +37,7 @@ class Player:
         self.description = description
         self.alive = True
         self.inventory = inventory
+        self.tired = False
 
     def in_inventory(self, item):
         if item in self.inventory:
@@ -145,12 +146,19 @@ def run_river(player):
 
         if river_crossed == True:
                 print(textwrap.fill("You are on the other side of the river now. You can see two paths. To the left is a path that has absolutely no snakes. I promise! To the right is a path covered in some kind of sand."))
-                break
+                interaction = parse_interaction()
+                if interaction[1] == 'left':
+                    return 'left'
+                if interaction[1] == 'right':
+                    return 'right'
 
 
         interaction = parse_interaction()
 
         try:
+
+            if interaction == 'inventory':
+                player.print_inventory()
 
             if interaction[0] == 'take' or interaction[0] == 'pick' or interaction[0] == 'drink':
                 
@@ -186,6 +194,7 @@ def run_river(player):
                 elif interaction[1] == 'rocks' or interaction[1] == 'stones' or interaction[1] == 'rock' or interaction[1] == 'stone':
                     print("You managed to jump across with the rocks. You feel tired now, but at least you made it.\n")
                     river_crossed = True
+                    player.tired = True
             else:
                 if (interaction[1] == 'tree'): 
                     tree.describe()
@@ -214,24 +223,30 @@ def run_snakes(player):
 
     while player.alive == True:
 
-        if snakes_gone == True:
-                print(textwrap.fill("You manage to escape the snakes and come to a cave. The inside is dark and hard to see. You could go over the cave or brave the darkness and go through.\n"))
-                interaction = parse_interaction()
-                if interaction[1] == 'over':
-                    run_over_cave()
-                if interaction[1] == 'through':
-                    run_cave()
+        
 
 
         interaction = parse_interaction()
 
         try:
 
+            if interaction == 'inventory':
+                player.print_inventory()
+
+
+            if snakes_gone == True:
+                print(textwrap.fill("You manage to escape the snakes and come to a cave. The inside is dark and hard to see. You could go over the cave or brave the darkness and go through.\n"))
+                interaction = parse_interaction()
+                if interaction[1] == 'over':
+                    return 'over'
+                if interaction[1] == 'through':
+                    return 'through'
+
             if interaction[0] == 'wrangle':
                 print('Yeehaw')
                 snakes_gone = True
 
-            if interaction[0] == 'take' or interaction[0] == 'pick':
+            elif interaction[0] == 'take' or interaction[0] == 'pick':
                 if interaction[1] == 'snake' or interaction[1] == 'snakes':
                     print("Are you crazy? No you can't pick up the snakes!\n")
 
@@ -266,7 +281,7 @@ def run_snakes(player):
                             input()
                             player.alive = False
                 elif (interaction[1] == 'snake' or interaction[1] == 'snakes' or interaction[1] == 'shrapnel' or interaction[1] == 'debris' or interaction[1] == 'plane' or interaction[1] == 'piece') and (shrapnel not in player.inventory):
-                    print("You don’t have any weapons!")
+                    print("You don't have any weapons!")
 
 
 
@@ -287,3 +302,97 @@ def run_snakes(player):
         except IndexError:
             print("I don't know that word. Try using at least two words, one action,\n and one object. (e.g. KILL SNAKES!!)\n")
 
+
+def run_quicksand(player):
+    desc = "The path ahead of you has a large pit of sand blocking you from the other side. There is a vine tangled around a tree, you could probably swing across if you could get it untangled. But it's just a bunch of sand, probably safe to just walk across, right?"
+    quicksand = Interactable("quicksand", "A large pit of sand in the jungle. It doesn't seem suspicious.")
+    vine = Interactable("vine", "A vine wrapped around a tree. You wonder if you could untie it. . .")
+    interactables = [quicksand, vine]
+    sand_crossed = False
+
+    quicksand = Scene((textwrap.fill(desc) + '\n'), interactables)
+    quicksand.describe()
+
+    while player.alive == True:    
+
+        if sand_crossed == True:
+            print(textwrap.fill("You crossed the quicksand and see two more paths. The right path is overgrown and dark. The left path leads to a thicket of berry bushes.\n"))
+            interaction = parse_interaction()
+            if interaction[1] == 'left':
+                return 'left'
+            if interaction[1] == 'right':
+                return 'right'
+            
+        interaction = parse_interaction()
+
+
+
+        try:
+
+            if interaction == 'inventory':
+                player.print_inventory()
+
+
+            if (interaction[0] == 'chop' or interaction[0] == 'cut' or interaction[0] == 'use') and (shrapnel in player.inventory):
+                if interaction[1] == 'vine' or interaction[1] == 'shrapnel' or interaction[1] == 'debris' or interaction[1] == 'plane' or interaction[1] == 'piece':
+                    
+                    print("You try to cut the vine with your plane shrapnel.\n")
+                    time.sleep(wait)
+                    print(f"Determining outcome… (75% chance of success)\n")
+                    time.sleep(wait)
+                    outcome = d100(25)
+                    if outcome == 'Success!':
+                        print(outcome)
+                        print("You cut the vine and use it to swing across!\n")
+                        sand_crossed = True
+                    
+                    else:
+                        print(outcome)
+                        time.sleep(wait)
+                        print("You managed to cut the vine and get across, but your shrapnel is rendered useless.")
+                        player.inventory.remove(shrapnel)
+                        sand_crossed = True
+
+            elif interaction[0] == 'take' or interaction[0] == 'pick' or interaction[0] == 'get' or interaction[0] == 'touch':
+                if interaction[1] == 'vine':
+                    print("You can't get it down from the tree.\n")
+                if interaction[1] == 'sand' or interaction[1] == 'quicksand':
+                    print("You try to take some of the sand, but you notice something strange about it. . . it's quicksand! Good thing you checked")
+
+
+            elif interaction[0] == 'cross' or interaction[0] == 'go' or interaction[0] == 'use' or interaction[0] == 'sail' or interaction[0] == 'jump' or interaction[0] == 'hop':
+                if interaction[1] == 'sand' or interaction[1] == 'quicksand':
+                    print("You try to walk through the sand and sink up to your knees immediately. It's quicksand.")
+
+                    time.sleep(wait)
+                    print(f"Determining outcome… (10% chance of success)\n")
+                    time.sleep(wait)
+                    outcome = d100(90)
+                    if outcome == 'Success!':
+                        if player.tired == True:
+                            print('Failure. . .')
+                            time.sleep(wait)
+                            print("You died! You are already tired and don't have enough energy to make it.")
+                            input()
+                            player.alive = False
+                        else:
+                            print(outcome)
+                            print("You somehow make it across the quicksand. You must be lucky!")
+                        sand_crossed = True
+
+            
+
+                    
+                else:
+                    print(outcome)
+                    time.sleep(wait)
+                    print("You died! You sank into the quicksand and trying to escape you died from exhaustion.")
+                    input()
+                    player.alive = False
+
+            elif interaction[1] == 'sand' or interaction[1] == 'quicksand':
+                quicksand.describe()
+
+
+        except IndexError:
+            print("I don't know that word. Try using at least two words, one action,\n and one object. (e.g. take jerky)\n")

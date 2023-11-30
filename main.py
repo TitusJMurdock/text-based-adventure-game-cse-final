@@ -42,10 +42,10 @@ if __name__ == '__main__':
     start_menu()
     while player.alive == True:
         run_plane(player)
-        run_river(player)
+        #run_river(player)
         
-        interaction = parse_interaction()
-        if interaction[1] == 'left':
+        choice = run_river(player)
+        if choice == 'left':
             run_snakes(player) 
-        if interaction[1] == 'right':
+        if choice == 'right':
             run_quicksand(player)
