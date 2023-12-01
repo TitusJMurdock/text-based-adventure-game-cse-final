@@ -1,6 +1,6 @@
 #funtion for parsing input
 action_keywords = ['look','get', 'search', 'take', 'pick', 'inventory', 'chop', 'cut', 'use', 'cross', 'go', 'sail', 'jump', 'hop', 'hit', 'attack', 'kill', 'wrangle', 'throw', 'run', 'leave', 'flee', 'touch']
-interactable_keywords = ['food', 'beef', 'jerky', 'first', 'aid', 'kit', 'medicine', 'shrapnel', 'debris', 'plane', 'piece', 'path', 'road', 'tree', 'leaf', 'boat', 'rocks', 'stones', 'water', 'river', 'left', 'right', 'snake', 'snakes', 'away', 'vine', 'sand', 'quicksand']
+interactable_keywords = ['food', 'beef', 'jerky', 'first', 'aid', 'kit', 'medicine', 'shrapnel', 'debris', 'plane', 'piece', 'path', 'road', 'tree', 'leaf', 'boat', 'rocks', 'stones', 'water', 'river', 'left', 'right', 'snake', 'snakes', 'away', 'vine', 'sand', 'quicksand', 'continue', 'around', 'over', 'through']
 
 
 def parse_interaction():

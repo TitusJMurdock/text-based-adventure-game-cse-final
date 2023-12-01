@@ -223,7 +223,13 @@ def run_snakes(player):
 
     while player.alive == True:
 
-        
+        if snakes_gone == True:
+                print(textwrap.fill("You manage to escape the snakes and come to a cave. The inside is dark and hard to see. You could go over the cave or brave the darkness and go through.\n"))
+                interaction = parse_interaction()
+                if interaction[1] == 'over':
+                    return 'over'
+                if interaction[1] == 'through':
+                    return 'through'
 
 
         interaction = parse_interaction()
@@ -234,13 +240,7 @@ def run_snakes(player):
                 player.print_inventory()
 
 
-            if snakes_gone == True:
-                print(textwrap.fill("You manage to escape the snakes and come to a cave. The inside is dark and hard to see. You could go over the cave or brave the darkness and go through.\n"))
-                interaction = parse_interaction()
-                if interaction[1] == 'over':
-                    return 'over'
-                if interaction[1] == 'through':
-                    return 'through'
+            
 
             if interaction[0] == 'wrangle':
                 print('Yeehaw')
@@ -372,13 +372,19 @@ def run_quicksand(player):
                         if player.tired == True:
                             print('Failure. . .')
                             time.sleep(wait)
-                            print("You died! You are already tired and don't have enough energy to make it.")
+                            print("You died! You are already tired and don't have enough energy to make it.\n")
                             input()
                             player.alive = False
                         else:
                             print(outcome)
-                            print("You somehow make it across the quicksand. You must be lucky!")
-                        sand_crossed = True
+                            print("You somehow make it across the quicksand. You must be lucky!\n")
+                            sand_crossed = True
+                    elif outcome == 'Failure. . .':
+                        print(outcome)
+                        time.sleep(wait)
+                        print("You died! You sank into the quicksand and trying to escape you died from exhaustion.")
+                        player.alive = False
+                        
 
             
 
@@ -396,3 +402,153 @@ def run_quicksand(player):
 
         except IndexError:
             print("I don't know that word. Try using at least two words, one action,\n and one object. (e.g. take jerky)\n")
+
+
+
+def run_fallen_tree(player):
+    desc = "You see a fallen tree in your path. You could walk around it, but wouldn't it be cooler to jump over?"
+    fallen_tree = Interactable("fallen_tree", "A tree fallen in the jungle. You didn't hear it; you wonder if it made a sound.")
+    interactables = [fallen_tree]
+    tree_crossed = False
+
+    fallen_tree = Scene((textwrap.fill(desc) + '\n'), interactables)
+    fallen_tree.describe()
+
+    while player.alive == True:
+
+        if tree_crossed == True:
+            break
+
+        interaction = parse_interaction()
+
+        try:
+
+            if interaction == 'inventory':
+                player.print_inventory()
+
+            if (interaction[0] == 'jump' or interaction[0] == 'hop' or interaction[0] == 'go'):
+                if interaction[1] == 'tree':
+                    print("You try to jump over the small tree.\n")
+                    time.sleep(wait)
+                    print(f"Determining outcome… (95% chance of success)\n")
+                    time.sleep(wait)
+                    outcome = d100(5)
+                    if outcome == 'Success!':
+                        print(outcome)
+                        print("You jumped over the small tree. It would have been embarrassing to fail that one.\n")
+                        tree_crossed = True
+                    
+                    else:
+                        print(outcome)
+                        time.sleep(wait)
+                        print("You died! You fell and hit your head on a mysteriously sharp rock that sat on the ground. That's embarassing.")
+                        input()
+                        player.alave = False
+                        tree_crossed = False
+                
+            if interaction[1] == 'path' or interaction[1] == 'around'  or interaction[1] == 'continue':
+                print("You go around the tree and make it to the other side.")
+                tree_crossed = True
+
+
+        except IndexError:
+            print("I don't know that word. Try using at least two words, one action,\n and one object. (e.g. take jerky)\n")
+
+
+def run_spider_cave(player):
+    print("You enter the dark cave, and the walls begin to move. You suddenly realize that it's filled with spiders!\n")
+    if first_aid_kit in player.inventory:
+        print("The spider bites hurt, but luckily your first aid kit has antivenom!")
+    
+    else:
+        print("You died! You walked into the spiders' web and got fed to their spider babies. If only you had a first aid kit.")
+        input()
+        return
+    
+
+def run_berries(player):
+    desc = "You come across a berry bush. Its fruit looks sweet, but you aren't sure how safe they are. You are getting very hungry. . ."
+    berries = Interactable("berries", "A bush full of delicious looking berries.")
+    interactables = [berries]
+    
+
+    berries = Scene((textwrap.fill(desc) + '\n'), interactables)
+    berries.describe()
+
+    while player.alive == True:
+
+        interaction = parse_interaction()
+
+        try:
+
+            if interaction == 'inventory':
+                player.print_inventory()
+            
+
+            if (interaction[0] == 'eat' or interaction[0] == 'take' or interaction[0] == 'go' or interaction[0] == 'get' or interaction[0] == 'walk'):
+                if interaction[1] == 'berries' and berries in berries.interactables:
+                    print("You eat the berries. They taste pretty good.\n")
+                    time.sleep(wait)
+                    print(f"Determining outcome… (50% chance of success)\n")
+                    time.sleep(wait)
+                    outcome = d100(50)
+                    if outcome == 'Success!':
+                        print(outcome)
+                        print("The berries were perfectly safe. Good intuition!\n")
+                        berries.interactables.remove(berries)
+                    
+                    else:
+                        print(outcome)
+                        time.sleep(wait)
+                        if first_aid_kit in player.inventory:
+                            print("Those berries were definitely poisonous. . . but luckily you had your first aid kit!")
+                            berries.interactables.remove(berries)
+                        else:
+                            print("You died! The berries were poisonous and time started slowing down until it stopped (For you at least).")
+                            input()
+                            player.alive = False
+
+                if interaction[1] == 'berries' and berries not in berries.interactables:
+                    print("You already ate those.")
+            
+            if interaction[0] == 'cross' or interaction[0] == 'walk' or interaction[0] == 'go' or interaction[0] == 'take':
+                if interaction[1] == 'path' or interaction[1] == 'road' or interaction[1] == 'around':
+                    if food in player.inventory:
+                        print("You pass the bush and decide to eat your food instead of risking it with the berries.")
+                        return
+                    elif food not in player.inventory:
+                        print("You died! Although you are hungry, you decide to walk past the bush. You have no other food so you starve in the jungle.")
+                        input()
+                        player.alive = False
+
+
+
+
+
+        except IndexError:
+            print("I don't know that word. Try using at least two words, one action,\n and one object. (e.g. take jerky)\n")
+
+
+def run_panther(player):
+    print("You approach the overgrown path. You realize that you have stumbled into a panther's territory, and it looks big!")
+    parse_interaction()
+    print("You died! The panther was bored so it killed you for entertainment.")
+    return
+
+
+
+    
+
+
+def run_end(player):
+
+    textwrap.fill("After your perilous journey, you finally make it back to civilization. You see a classic middle-of-the-jungle airport! We all know about those! Hopefully you can get a ticket on such short notice.")
+    print('\n\n\n\n')
+    print(' __   __  _______  __   __    _     _  ___   __    _  __   __   __   __  ')
+    print('|  | |  ||       ||  | |  |  | | _ | ||   | |  |  | ||  | |  | |  | |  | ')
+    print('|  |_|  ||   _   ||  | |  |  | || || ||   | |   |_| ||  | |  | |  | |  | ')
+    print('|       ||  | |  ||  |_|  |  |       ||   | |       ||  | |  | |  | |  | ')
+    print('|_     _||  |_|  ||       |  |       ||   | |  _    ||__| |__| |__| |__| ')
+    print('  |   |  |       ||       |  |   _   ||   | | | |   | __   __   __   __  ')
+    print('  |___|  |_______||_______|  |__| |__||___| |_|  |__||__| |__| |__| |__| ')
+    return

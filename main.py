@@ -46,6 +46,26 @@ if __name__ == '__main__':
         
         choice = run_river(player)
         if choice == 'left':
-            run_snakes(player) 
-        if choice == 'right':
-            run_quicksand(player)
+            choice = run_snakes(player) 
+            if choice == 'over':
+                run_fallen_tree(player)
+                
+            elif choice == 'through':
+                run_spider_cave(player)
+                
+            else:
+                break
+        elif choice == 'right':
+            
+            choice = run_quicksand(player) 
+            if choice == 'left':
+                run_berries(player)
+                
+            elif choice == 'right':
+                run_panther(player)
+                break
+            else:
+                break
+        run_end(player)
+        break
+    
