@@ -3,7 +3,7 @@ import textwrap
 import time
 import random
 
-wait = 0
+wait = 1
 
 class Scene:
     def __init__(self, description, interactables):
@@ -72,6 +72,7 @@ def run_plane(player):
 
     plane = Scene((textwrap.fill(desc) + '\n'), interactables)
     plane.describe()
+    print("\nTry typing 'take', 'walk', or 'go' and then typing 'path' if you are stuck.")
     
 
     while player.alive == True:
