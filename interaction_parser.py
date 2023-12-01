@@ -1,6 +1,6 @@
 #funtion for parsing input
-action_keywords = ['look','get', 'search', 'take', 'pick', 'inventory', 'chop', 'cut', 'use', 'cross', 'go', 'sail', 'jump', 'hop', 'hit', 'attack', 'kill', 'wrangle', 'throw', 'run', 'leave', 'flee', 'touch']
-interactable_keywords = ['food', 'beef', 'jerky', 'first', 'aid', 'kit', 'medicine', 'shrapnel', 'debris', 'plane', 'piece', 'path', 'road', 'tree', 'leaf', 'boat', 'rocks', 'stones', 'water', 'river', 'left', 'right', 'snake', 'snakes', 'away', 'vine', 'sand', 'quicksand', 'continue', 'around', 'over', 'through']
+action_keywords = ['walk','drink', 'look','get', 'search', 'take', 'pick', 'inventory', 'chop', 'cut', 'use', 'cross', 'go', 'sail', 'jump', 'hop', 'hit', 'attack', 'kill', 'wrangle', 'throw', 'run', 'leave', 'flee', 'touch', 'eat']
+interactable_keywords = ['food', 'beef', 'jerky', 'first', 'aid', 'kit', 'medicine', 'shrapnel', 'debris', 'plane', 'piece', 'path', 'road', 'tree', 'leaf', 'boat','rock', 'stone', 'rocks', 'stones', 'water', 'river', 'left', 'right', 'snake', 'snakes', 'away', 'vine', 'sand', 'quicksand', 'continue', 'around', 'over', 'through', 'berries', 'friut']
 
 
 def parse_interaction():
@@ -16,6 +16,9 @@ def parse_interaction():
     #returns 2 lists, one the action and two the interactable
     action = list(set(text) & set(action_keywords))
     interactable = list(set(text) & set(interactable_keywords))
+
+    if len(action) == 0:
+        action = ['look']
 
     #combines action and interactale into tuple
     #action is always index 0, interactable is always index 1

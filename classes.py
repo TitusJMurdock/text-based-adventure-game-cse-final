@@ -486,7 +486,7 @@ def run_berries(player):
             
 
             if (interaction[0] == 'eat' or interaction[0] == 'take' or interaction[0] == 'go' or interaction[0] == 'get' or interaction[0] == 'walk'):
-                if interaction[1] == 'berries' and berries in berries.interactables:
+                if interaction[1] == 'berries' or interaction[1] == 'friut' and berries in berries.interactables:
                     print("You eat the berries. They taste pretty good.\n")
                     time.sleep(wait)
                     print(f"Determining outcome… (50% chance of success)\n")
