@@ -52,6 +52,8 @@ class Player:
 
 
 
+
+
 def d100(percent_chance):
     d100 = random.randint(1, 100)
     if d100 >= percent_chance:
@@ -277,6 +279,7 @@ def run_snakes(player):
                         if first_aid_kit in player.inventory:
                             print('Luckily you have a first aid kit!')
                             player.inventory.remove(first_aid_kit)
+                            snakes_gone = True
                         else:
                             print("You died! The snakes didn't like the taste of shrapnel so they had you for lunch. If only you had a first aid kit.\n")
                             input()
