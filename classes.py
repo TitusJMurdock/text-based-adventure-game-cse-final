@@ -476,8 +476,8 @@ def run_berries(player):
     interactables = [berries]
     
 
-    berries = Scene((textwrap.fill(desc) + '\n'), interactables)
-    berries.describe()
+    berry_bush = Scene((textwrap.fill(desc) + '\n'), interactables)
+    berry_bush.describe()
 
     while player.alive == True:
 
@@ -488,9 +488,11 @@ def run_berries(player):
             if interaction == 'inventory':
                 player.print_inventory()
             
+            if interaction[1] == 'berries' and berries not in berry_bush.interactables:
+                    print("You already ate those.")
 
-            if (interaction[0] == 'eat' or interaction[0] == 'take' or interaction[0] == 'go' or interaction[0] == 'get' or interaction[0] == 'walk'):
-                if interaction[1] == 'berries' or interaction[1] == 'friut' and berries in berries.interactables:
+            elif (interaction[0] == 'eat' or interaction[0] == 'take' or interaction[0] == 'go' or interaction[0] == 'get' or interaction[0] == 'walk'):
+                if interaction[1] == 'berries' or interaction[1] == 'friut' and berries in berry_bush.interactables:
                     print("You eat the berries. They taste pretty good.\n")
                     time.sleep(wait)
                     print(f"Determining outcome… (50% chance of success)\n")
@@ -499,23 +501,29 @@ def run_berries(player):
                     if outcome == 'Success!':
                         print(outcome)
                         print("The berries were perfectly safe. Good intuition!\n")
-                        berries.interactables.remove(berries)
+                        berry_bush.interactables.remove(berries)
                     
                     else:
                         print(outcome)
                         time.sleep(wait)
                         if first_aid_kit in player.inventory:
                             print("Those berries were definitely poisonous. . . but luckily you had your first aid kit!")
-                            berries.interactables.remove(berries)
+                            berry_bush.interactables.remove(berries)
                         else:
                             print("You died! The berries were poisonous and time started slowing down until it stopped (For you at least).")
                             input()
                             player.alive = False
-
-                if interaction[1] == 'berries' and berries not in berries.interactables:
-                    print("You already ate those.")
+                elif interaction[1] == 'path' or interaction[1] == 'road' or interaction[1] == 'around':
+                    if food in player.inventory:
+                        print("You pass the bush and decide to eat your food instead of risking it with the berries.")
+                        return
+                    elif food not in player.inventory:
+                        print("You died! Although you are hungry, you decide to walk past the bush. You have no other food so you starve in the jungle.")
+                        input()
+                        player.alive = False
+                
             
-            if interaction[0] == 'cross' or interaction[0] == 'walk' or interaction[0] == 'go' or interaction[0] == 'take':
+            elif interaction[0] == 'cross' or interaction[0] == 'walk' or interaction[0] == 'go' or interaction[0] == 'take':
                 if interaction[1] == 'path' or interaction[1] == 'road' or interaction[1] == 'around':
                     if food in player.inventory:
                         print("You pass the bush and decide to eat your food instead of risking it with the berries.")
