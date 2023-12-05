@@ -10,8 +10,6 @@ class Scene:
         self.description = description
         self.interactables = interactables
         self.interactables_names = ()
-        #for i in self.interactables:
-        #    self.interactables_names[i] = interactables[i].name
 
     def describe(self):
         print(self.description)
@@ -563,4 +561,5 @@ def run_end(player):
     print('|_     _||  |_|  ||       |  |       ||   | |  _    ||__| |__| |__| |__| ')
     print('  |   |  |       ||       |  |   _   ||   | | | |   | __   __   __   __  ')
     print('  |___|  |_______||_______|  |__| |__||___| |_|  |__||__| |__| |__| |__| ')
+    input()
     return
